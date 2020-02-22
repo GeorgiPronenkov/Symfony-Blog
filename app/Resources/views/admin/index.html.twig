@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <h3>List of all users:</h3>
+    {% for user in allUsers %}
+        <a href="{{ path('admin_user_profile', {'id': user.id}) }}">{{ user.email }}</a>
+        <hr />
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    {% for msg in app.session.flashBag.get('message') %}
+
+        <div id="msg" class="alert alert-success text-center">
+            {{ msg }}
+        </div>
+
+    {% endfor %}
+
+    <small><b>From: </b>{{ message.sender.fullName }}</small><br />
+    <hr>
+     <small><b>About: </b> {{ message.about }}</small><br>
+    <hr>
+     <p><b>Content:</b>{{ message.content }}</p>
+    <hr>
+     <small>
+         <b>Date:</b>{{ message.dateAdded|date("F jS \\a\\t g:ia", 'Europe/Sofia') }}
+     </small>
+
+
+
+    <h2>Reply to me:</h2>
+    <button class="btn btn-success btn-sm" id="btnMessage">Expand</button>
+
+    <div id="form"></div>
+
+    <script>
+        let form = $(`
+
+             <form method="post">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">About</label>
+                     <input type="text" class="form-control" name="message[about]>
+                        <small id="emailHelp" class="form-text text-muted">Fill the subject of your message</small>
+                 </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Content:</label>
+                <textarea rows="10" class="form-control" name="message[content] placeholder="place your message here"></textarea>
+                </div>
+                {{ form_row(form._token) }}
+                <button type="submit" class="btn btn-primary">Send</button>
+             </form>
+
+        `);
+
+        $(`#btnMessage`).on('click', function (e) {
+            e.preventDefault();
+            $('#form').append(form);
+            $('#form').toggle();
+        })
+    </script>
+
+{% endblock %}
+

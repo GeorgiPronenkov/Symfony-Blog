@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    {% for msg in app.session.flashBag.get('message') %}
+
+        <div id="msg" class="alert alert-success text-center">
+            {{ msg }}
+        </div>
+
+    {% endfor %}
+
+    <div class="container body-content">
+        <div class="row">
+            <div class="col-md-12">
+                <article>
+                    <header>
+                        <h2>{{ article.title }}</h2>
+                    </header>
+
+                    <p>
+                        {{ article.content }}
+                    </p>
+
+                    <img src="{{ asset('uploads/images/' ~ article.image) }}" width="400" height="200" alt="">
+
+                    <p>Like the article?
+                        <a href="{{ path('article_likes', {'id': article.id}) }}"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></a>
+                    </p>
+                    <hr>
+
+                    <div id="form">
+
+                    </div>
+
+                    {% for comment in comments %}
+                        <p><em>{{ comment.content }}</em></p>
+                       <strong>date:</strong>
+                        <small>{{ comment.dateAdded|date("F jS \\a\\t g:ia", 'Europe/Sofia') }}<br> <b>posted by</b></small>
+                        <a href="{{ path('user_message', {'id': comment.author.id, 'articleId': article.id }) }}">
+                            <span>
+                                {{ comment.author.fullName }}
+                            </span></a>
+                        <hr />
+                    {% endfor %}
+                    <button class="btn btn-success btn-sm" id="btnComment">Add comment</button>
+                    <footer>
+                        <div class="pull-right">
+                            {% if app.getUser() and app.getUser().isAdmin() %}
+                            <a class="btn btn-danger btn-xs" href="{{ path('article_delete', {'id': article.id}) }}">delete </a>
+                            <a class="btn btn-success btn-xs" href="{{ path('article_edit', {'id': article.id}) }}">edit </a>
+                            {% endif %}
+                            <a class="btn btn-info btn-xs" href="{{ path('blog_index') }}">back<<< </a>
+                        </div>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let form = $(`
+            <form method="post" action="{{ path('add_comment', {'id': article.id}) }}">
+               <div class="form-group">
+                   <label class="col-sm-4 control-label" for="article_content"></label>
+                     <div class="col-sm-12">
+                        <textarea class="form-control" rows="6" id="comment_content" name="comment[content]"></textarea>
+                        <input class="btn btn-success btn-sm" type="submit" value="Create" />
+                     </div>
+                     <br />
+               </div>
+            </form>
+        `);
+
+        $(`#btnComment`).on('click', function (e) {
+           e.preventDefault();
+           $('#form').append(form);
+           $('#form').toggle();
+        })
+    </script>
+
+{% endblock %}

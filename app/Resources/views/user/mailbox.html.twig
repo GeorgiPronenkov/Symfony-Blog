@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <h3>List of all messages:</h3>
+    {% for message in pagination %}
+        {% if not message.reader %}
+        <p>
+            <a href="{{ path('user_current_message', {'id': message.id}) }}">
+                {{ message.sender.email }}
+            </a>
+            <span style="float: right; color: red">...Unread</span>
+        </p>
+        <hr>
+        {% else %}
+            <p>
+                <a href="{{ path('user_current_message', {'id': message.id}) }}">
+                    {{ message.sender.email }}
+                </a>
+                <span style="float: right; color: green">Readed</span>
+            </p>
+            <hr>
+        {% endif %}
+
+    {% endfor %}
+    {# display navigation #}
+    <div class="navigation text-center font-weight-bold">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+{% endblock %}
+
